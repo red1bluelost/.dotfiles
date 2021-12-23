@@ -31,6 +31,12 @@ colors() {
 	done
 }
 
+# Git branch for the prompt
+parse_git_branch()
+{
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
 # Change the window title of X terminals
@@ -70,9 +76,9 @@ if ${use_color} ; then
 	fi
 
 	if [[ ${EUID} == 0 ]] ; then
-		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
+		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \w\[\033[01;31m\]]\$\[\033[00m\] '
 	else
-		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '
+		PS1='\[\033[1;35;40m\][\u@\h\[\033[01;34m\]|\[\033[01;37m\]\w\[\033[01;34m\]$(parse_git_branch)\[\033[01;35m\]]\[\033[00m\]\[\033[01;35m\]\$\[\033[00m\] '
 	fi
 
 	alias ls='ls --color=auto'
@@ -82,19 +88,13 @@ if ${use_color} ; then
 else
 	if [[ ${EUID} == 0 ]] ; then
 		# show root@ when we don't have colors
-		PS1='\u@\h \W \$ '
+		PS1='\u@\h \w \$ '
 	else
 		PS1='\u@\h \w \$ '
 	fi
 fi
 
 unset use_color safe_term match_lhs sh
-
-alias cp="cp -i"                          # confirm before overwriting something
-alias df='df -h'                          # human-readable sizes
-alias free='free -m'                      # show sizes in MB
-alias np='nano -w PKGBUILD'
-alias more=less
 
 xhost +local:root > /dev/null 2>&1
 
