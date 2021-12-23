@@ -1,0 +1,7 @@
+[user]
+	name = Micah Weston
+	email = msweston12@cox.net
+[core]
+	editor = vim
+[init]
+	defaultBranch = main
