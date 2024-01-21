@@ -39,16 +39,6 @@ parse_git_branch()
 
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
-# Change the window title of X terminals
-case ${TERM} in
-	xterm*|rxvt*|Eterm*|aterm|kterm|gnome*|interix|konsole*)
-		PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\007"'
-		;;
-	screen*)
-		PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\033\\"'
-		;;
-esac
-
 use_color=true
 
 # Set colorful PS1 only on colorful terminals.
@@ -75,23 +65,10 @@ if ${use_color} ; then
 		fi
 	fi
 
-	if [[ ${EUID} == 0 ]] ; then
-		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \w\[\033[01;31m\]]\$\[\033[00m\] '
-	else
-		PS1='\[\033[1;35;40m\][\u@\h\[\033[01;34m\]|\[\033[01;37m\]\w\[\033[01;34m\]$(parse_git_branch)\[\033[01;35m\]]\[\033[00m\]\[\033[01;35m\]\$\[\033[00m\] '
-	fi
-
 	alias ls='ls --color=auto'
 	alias grep='grep --colour=auto'
 	alias egrep='egrep --colour=auto'
 	alias fgrep='fgrep --colour=auto'
-else
-	if [[ ${EUID} == 0 ]] ; then
-		# show root@ when we don't have colors
-		PS1='\u@\h \w \$ '
-	else
-		PS1='\u@\h \w \$ '
-	fi
 fi
 
 unset use_color safe_term match_lhs sh
@@ -135,3 +112,31 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
+
+export PATH="$PATH:$HOME/.cargo/bin/"
+
+export EDITOR="/usr/bin/vim"
+
+##-----------------------------------------------------
+## synth-shell-prompt.sh
+if [ -f $HOME/.config/synth-shell/synth-shell-prompt.sh ] && [ -n "$( echo $- | grep i )" ]; then
+	source $HOME/.config/synth-shell/synth-shell-prompt.sh
+fi
+
+##-----------------------------------------------------
+## alias
+if [ -f $HOME/.config/synth-shell/alias.sh ] && [ -n "$( echo $- | grep i )" ]; then
+	source $HOME/.config/synth-shell/alias.sh
+fi
+
+##-----------------------------------------------------
+## better-history
+if [ -f $HOME/.config/synth-shell/better-history.sh ] && [ -n "$( echo $- | grep i )" ]; then
+	source $HOME/.config/synth-shell/better-history.sh
+fi
+
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+[ -f "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"

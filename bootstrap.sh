@@ -1,11 +1,11 @@
 #!/bin/bash
 set -o errexit
 
-link() {
-  echo "Linking $1 ..."
-  rm -f ~/$1 && ln -s ~/.dotfiles/$1 ~/$1
-}
+# TODO auto install base-devel, git, and cargo
 
-link .gitconfig
-link .bashrc
-
+# Setting up the synth shell style (TODO re-add)
+# sudo pacman -Syu powerline-fonts
+# git clone --recursive https://github.com/andresgongora/synth-shell.git
+# chmod +x synth-shell/setup.sh
+# cd synth-shell
+# ./setup.sh < $(echo "iunynyy")

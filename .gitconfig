@@ -1,9 +1,13 @@
 [user]
 	name = Micah Weston
-	email = msweston12@cox.net
+	email = micahsweston@gmail.com
 [core]
-	editor = vim
+	editor = nvim
 [init]
 	defaultBranch = main
 [credential]
 	helper = store
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true

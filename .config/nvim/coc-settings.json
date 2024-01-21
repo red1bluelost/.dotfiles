@@ -1,0 +1,9 @@
+{
+  "semanticTokens.enable": true,
+  "colors.enable": true,
+  "suggest.noselect": true,
+  "inlayHint.enable": true,
+  "inlayHint.display": true,
+  "inlayHint.enableParameter": true,
+  "inlayHint.refreshOnInsertMode": true,
+}

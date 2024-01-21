@@ -1,0 +1,10 @@
+[package]
+name = "bootstrap"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { version = "1.0.79", features = ["backtrace"] }
+curl = "0.4.44"
+home = "0.5.9"
+lazy_static = "1.4.0"
