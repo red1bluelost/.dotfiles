@@ -48,6 +48,40 @@ fn link(path: impl AsRef<Path>) -> anyhow::Result<()> {
     Ok(())
 }
 
+fn plug_download() -> anyhow::Result<()> {
+    let file = "plug.vim";
+    let mut file_path = home_dir()?.to_owned();
+    file_path.push(".local");
+    file_path.push("share");
+    file_path.push("nvim");
+    file_path.push("site");
+    file_path.push("autoload");
+    file_path.push(file);
+    ensure_parent(&file_path)?;
+    let mut config_file = File::create(&file_path)?;
+
+    let mut handle = curl::easy::Easy::new();
+    handle.url(&format!(
+        "https://raw.githubusercontent.com/junegunn/vim-plug/master/{}",
+        file
+    ))?;
+
+    let mut transfer = handle.transfer();
+    transfer.write_function(|data| {
+        config_file.write_all(data).map_or_else(
+            |err| {
+                eprintln!("error writing data to file");
+                eprintln!("file: {}", file_path.display());
+                eprintln!("error: {}", err);
+                Ok(0)
+            },
+            |()| Ok(data.len()),
+        )
+    })?;
+    transfer.perform()?;
+    Ok(())
+}
+
 fn llvm_download_file(prefix: &str, file: &str) -> anyhow::Result<()> {
     let file_path = home_dir()?.join(&*CONFIG_NVIM_PATH).join(file);
     ensure_parent(&file_path)?;
@@ -85,7 +119,6 @@ const CONFIG_NVIM_LINK_PATHS: &[&str] = &[
     "init.vim",
     "coc-settings.json",
     "lua/config.lua",
-    "autoload/plug.vim",
 ];
 
 const LLVM_VIM_PATHS: &[&str] = &[
@@ -111,12 +144,12 @@ const MLIR_VIM_PATHS: &[&str] = &[
 ];
 
 fn main() -> anyhow::Result<()> {
-    // for p in LINK_PATHS {
-    //     link(p)?;
-    // }
-    // for p in CONFIG_NVIM_LINK_PATHS {
-    //     link(CONFIG_NVIM_PATH.join(p))?;
-    // }
+    for p in LINK_PATHS {
+        link(p)?;
+    }
+    for p in CONFIG_NVIM_LINK_PATHS {
+        link(CONFIG_NVIM_PATH.join(p))?;
+    }
 
     for p in LLVM_VIM_PATHS {
         llvm_download_file("llvm/utils/vim", p)?;
@@ -124,6 +157,7 @@ fn main() -> anyhow::Result<()> {
     for p in MLIR_VIM_PATHS {
         llvm_download_file("mlir/utils/vim", p)?;
     }
+    plug_download()?;
 
     Ok(())
 }

@@ -1,4 +1,4 @@
-call plug#begin('~/.config/nvim/plugged')
+call plug#begin(stdpath('data') . '/plugged')
 
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
@@ -37,6 +37,7 @@ set wildmode=longest,list,full
 "coc extensions to use
 let g:coc_global_extensions = [
       \'coc-clangd',
+      \'coc-highlight',
       \'coc-git',
       \'coc-gitignore',
       \'coc-json',
